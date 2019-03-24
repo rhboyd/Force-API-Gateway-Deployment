@@ -1,7 +1,3 @@
-sam package --s3-bucket rboyd-workshop --template-file templates/template.yaml --output-template-file build/packaged.yaml --profile workshop \
-&& aws cloudformation deploy --template-file build/packaged.yaml --stack-name petition-api --parameter-overrides STAGE=petition DOMAIN=rboyd.dev --capabilities CAPABILITY_IAM --profile workshop
-
-
 sam build --use-container -b ./build/ -t template.yaml \
 && sam package --s3-bucket rboyd-workshop --template-file build/template.yaml --output-template-file build/packaged.yaml --profile workshop\
 && aws cloudformation deploy --template-file build/packaged.yaml --stack-name macro  --capabilities CAPABILITY_NAMED_IAM --profile workshop
