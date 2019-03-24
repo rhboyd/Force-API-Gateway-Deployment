@@ -1,0 +1,77 @@
+{
+  "requestId": 43242,
+  "fragment": {
+    "Resources": {
+		"RestAPI": {
+			"Type": "AWS::ApiGateway::RestApi",
+			"Properties": {
+				"Name": "Macro Test API"
+			}
+		},
+		"Message": {
+			"Type": "AWS::ApiGateway::Resource",
+			"Properties": {
+				"ParentId": null,
+				"PathPart": "message",
+				"RestApiId": null
+			}
+		},
+		"OptionsMethod": {
+			"Type": "AWS::ApiGateway::Method",
+			"Properties": {
+				"AuthorizationType": "NONE",
+				"RestApiId": {
+					"Ref": "RestAPI"
+				},
+				"ResourceId": {
+					"Ref": "Message"
+				},
+				"HttpMethod": "OPTIONS",
+				"Integration": {
+					"IntegrationResponses": [
+						{
+							"StatusCode": 200,
+							"ResponseParameters": {
+								"method.response.header.Content-Type": "'application/json'"
+							},
+							"ResponseTemplates": {
+								"application/json": ""
+							}
+						}
+					],
+					"PassthroughBehavior": "WHEN_NO_MATCH",
+					"RequestTemplates": {
+						"application/json": "{\"statusCode\": 200}"
+					},
+					"Type": "MOCK"
+				},
+				"MethodResponses": [
+					{
+						"StatusCode": 200,
+						"ResponseModels": {
+							"application/json": "Empty"
+						},
+						"ResponseParameters": {
+							"method.response.header.Content-Type": false
+						}
+					}
+				]
+			}
+		},
+		"RestAPIdeployment": {
+			"Type": "AWS::ApiGateway::Deployment",
+            "Deploy": "ALWAYS",
+			"DependsOn": [
+				"OptionsMethod"
+			],
+			"Properties": {
+				"Description": "Prod Stage for Macro Test API",
+				"RestApiId": {
+					"Ref": "RestAPI"
+				},
+				"StageName": "Prod"
+			}
+		}
+	}
+  }
+}

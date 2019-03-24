@@ -1,0 +1,25 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Deploy API macro
+  A simple macro that ensures changes to your api definition create a new deployment
+Resources:
+  Macro:
+    Type: AWS::CloudFormation::Macro
+    Properties:
+      Name: APIDeploy
+      FunctionName: !GetAtt APIDeployMacroFunction.Arn
+  APIDeployMacroFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: make_new_deployment.lambda_handler
+      Runtime: python3.7
+
+Outputs:
+  APIDeployMacroFunction:
+    Description: "API Deployment Macro Lambda Function ARN"
+    Value: !GetAtt APIDeployMacroFunction.Arn
+    Export:
+      Name: "APIDeployMacroFunction"
